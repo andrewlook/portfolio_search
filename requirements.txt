@@ -1,0 +1,8 @@
+fastcore
+fastai
+pandas
+numpy
+matplotlib
+Pillow
+faiss
+pyautotrace
