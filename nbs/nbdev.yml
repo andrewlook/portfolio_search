@@ -2,8 +2,8 @@ project:
   output-dir: _docs
 
 website:
-  title: "singleline_vectorize"
-  site-url: "https://andrewlook.github.io/singleline_vectorize"
+  title: "singleline_vectorization"
+  site-url: "https://andrewlook.github.io/singleline_vectorization"
   description: "Tools for taking raster scans of sketchbook pages, filtering out non-drawings, and vectorizing the drawings"
   repo-branch: main
-  repo-url: "https://github.com/andrewlook/singleline_vectorize"
+  repo-url: "https://github.com/andrewlook/singleline_vectorization"

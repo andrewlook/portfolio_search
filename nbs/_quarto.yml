@@ -17,4 +17,7 @@ website:
   sidebar:
     style: floating
 
+resources:
+  - CNAME
+
 metadata-files: [nbdev.yml, sidebar.yml]
