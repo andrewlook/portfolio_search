@@ -42,4 +42,8 @@ d = { 'settings': { 'branch': 'main',
                                                      'singleline_vectorization.embeddings.sketchbook_dataloaders': ( 'embeddings.html#sketchbook_dataloaders',
                                                                                                                      'singleline_vectorization/embeddings.py'),
                                                      'singleline_vectorization.embeddings.sketchbook_resnet34': ( 'embeddings.html#sketchbook_resnet34',
-                                                                                                                  'singleline_vectorization/embeddings.py')}}}
+                                                                                                                  'singleline_vectorization/embeddings.py')},
+            'singleline_vectorization.fileorg': { 'singleline_vectorization.fileorg.flat_sketchbook_paths': ( 'fileorg.html#flat_sketchbook_paths',
+                                                                                                              'singleline_vectorization/fileorg.py'),
+                                                  'singleline_vectorization.fileorg.flatten_sketchbooks': ( 'fileorg.html#flatten_sketchbooks',
+                                                                                                            'singleline_vectorization/fileorg.py')}}}
