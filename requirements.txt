@@ -1,8 +1,10 @@
 fastcore
 fastai
+fastprogress
 pandas
 numpy
 matplotlib
 Pillow
-faiss
+faiss-cpu
+scikit-learn
 pyautotrace

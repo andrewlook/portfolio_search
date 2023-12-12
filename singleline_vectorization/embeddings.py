@@ -4,13 +4,15 @@
 __all__ = ['DEFAULT_BATCH_SIZE', 'sketchbook_dataloaders', 'sketchbook_resnet34', 'batch_fnames_and_images', 'predict_embeddings',
            'Hook', 'embed_dir']
 
-# %% ../nbs/01_embeddings.ipynb 3
+# %% ../nbs/01_embeddings.ipynb 4
 import math
 
 import pandas as pd
 from fastai.vision.all import *
 
-# %% ../nbs/01_embeddings.ipynb 5
+from .fileorg import *
+
+# %% ../nbs/01_embeddings.ipynb 6
 DEFAULT_BATCH_SIZE = 64
 
 
@@ -31,16 +33,17 @@ def sketchbook_dataloaders(sketchbooks_dir, **kwargs):
     )
     return dataloaders
 
-# %% ../nbs/01_embeddings.ipynb 13
+# %% ../nbs/01_embeddings.ipynb 14
 def sketchbook_resnet34(sketchbooks_dir, load_checkpoint=None):
     dataloaders = sketchbook_dataloaders(sketchbooks_dir)
-    learn = vision_learner(dls, resnet34, metrics=error_rate)
+    print(dataloaders.vocab)
+    learn = vision_learner(dataloaders, resnet34, metrics=error_rate)
     if load_checkpoint:
         print(f"loading {load_checkpoint}")
         learn.load(load_checkpoint)
     return learn
 
-# %% ../nbs/01_embeddings.ipynb 22
+# %% ../nbs/01_embeddings.ipynb 23
 def batch_fnames_and_images(sketchbooks_dir):
     """
     Prepare data to compute embeddings over all images and store
@@ -60,11 +63,13 @@ def batch_fnames_and_images(sketchbooks_dir):
     )
     return batched_fnames, ordered_dls
 
-# %% ../nbs/01_embeddings.ipynb 24
+# %% ../nbs/01_embeddings.ipynb 25
 def predict_embeddings(model, xb):
+    # import pdb
+    # pdb.set_trace()
     with torch.no_grad():
         with Hook(model[-1][-2]) as hook:
-            output = model.eval()(xb)
+            output = model.to("cpu").eval()(xb.to("cpu"))
             act = hook.stored
     return act.cpu().numpy()
 
@@ -82,20 +87,18 @@ class Hook:
     def __exit__(self, *args):
         self.hook.remove()
 
-# %% ../nbs/01_embeddings.ipynb 28
+# %% ../nbs/01_embeddings.ipynb 29
 def embed_dir(input_dir, learner):
     batched_fnames, ordered_dls = batch_fnames_and_images(input_dir)
     with torch.no_grad():
         for i, batch in enumerate(zip(batched_fnames, ordered_dls.train)):
-            if i > 0:
-                break
             batched_fnames, (x, y) = batch
             bs = len(batched_fnames)
             assert bs == x.shape[0]
             assert bs == y.shape[0]
 
-            # activations = predict_embeddings(learn.model, x)
-            # assert bs == activations.shape[0]
+            activations = predict_embeddings(learner.model, x)
+            assert bs == activations.shape[0]
 
             for j in range(bs):
                 x_j = x[j]
@@ -106,10 +109,11 @@ def embed_dir(input_dir, learner):
                 label_j = ordered_dls.vocab[y_j]
                 # pred_label: prediction made relative to the vocab of the learner's model
                 # (may be different than what's in the dataloader we're using for input).
-                pred_label_j, pred_idx_j, pred_probs_j = learn.predict(x_j.cpu())
+                pred_label_j, pred_idx_j, pred_probs_j = learner.predict(x_j.cpu())
                 yield {
                     "idx": j + i * bs,
-                    "fname": fname_j,
+                    "abs_fname": fname_j,
+                    "rel_fname": str(fname_j).replace(str(input_dir) + "/", ""),
                     "label": label_j,
                     "pred_label": pred_label_j,
                     "pred_idx": pred_idx_j.cpu().numpy(),
