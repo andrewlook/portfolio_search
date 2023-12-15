@@ -2,8 +2,8 @@ project:
   output-dir: _docs
 
 website:
-  title: "singleline_vectorization"
-  site-url: "https://andrewlook.github.io/singleline_vectorization"
+  title: "portfolio_search"
+  site-url: "https://andrewlook.github.io/portfolio_search"
   description: "Tools for taking raster scans of sketchbook pages, filtering out non-drawings, and vectorizing the drawings"
   repo-branch: main
-  repo-url: "https://github.com/andrewlook/singleline_vectorization"
+  repo-url: "https://github.com/andrewlook/portfolio_search"
